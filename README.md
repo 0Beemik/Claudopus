@@ -56,7 +56,7 @@ Claudopus uses **Claude Code's native subagent system** — the orchestration la
 ### Project install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claudopus.git
+git clone https://github.com/0Beemik/Claudopus.git
 cd claudopus
 chmod +x install.sh
 ./install.sh
