@@ -1,0 +1,42 @@
+{
+  "_readme": "This file is the persistent memory for Claudopus. Read it at the start of every session. Update it at the end of every significant session. Do not delete fields — set them to null if unknown.",
+  "project": {
+    "name": null,
+    "description": null,
+    "repository": null,
+    "created": null,
+    "last_session": null
+  },
+  "stack": {
+    "language": null,
+    "runtime": null,
+    "framework": null,
+    "database": null,
+    "styling": null,
+    "testing": null,
+    "build": null,
+    "deployment": null,
+    "other": []
+  },
+  "conventions": {
+    "naming": null,
+    "file_structure": null,
+    "imports": null,
+    "error_handling": null,
+    "state_management": null,
+    "api_style": null,
+    "test_colocation": null,
+    "branch_naming": "feature/*, fix/*, chore/*, refactor/*",
+    "commit_format": "type(scope): description"
+  },
+  "decisions": [],
+  "current_task": null,
+  "open_items": [],
+  "test_baseline": {
+    "coverage_threshold": null,
+    "test_command": null,
+    "passing_count": null,
+    "last_checked": null
+  },
+  "agents_used": []
+}

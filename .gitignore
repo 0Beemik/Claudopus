@@ -1,0 +1,5 @@
+.claude/memory/plans/
+.claude/settings.local.json
+*.jsonl
+node_modules/
+.DS_Store

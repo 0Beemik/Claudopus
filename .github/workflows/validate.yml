@@ -1,0 +1,106 @@
+name: Validate install
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Check all required files are present
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required files
+        run: |
+          echo "Checking Claudopus file structure..."
+
+          required_files=(
+            ".claude/CLAUDE.md"
+            ".claude/settings.json"
+            ".claude/agents/orchestrator.md"
+            ".claude/agents/interviewer.md"
+            ".claude/agents/planner.md"
+            ".claude/agents/executor.md"
+            ".claude/agents/reviewer.md"
+            ".claude/agents/verifier.md"
+            ".claude/skills/deep-interview.md"
+            ".claude/skills/plan.md"
+            ".claude/skills/build.md"
+            ".claude/skills/review.md"
+            ".claude/skills/verify.md"
+            ".claude/skills/commit.md"
+            ".claude/hooks/settings.json"
+            ".claude/commands/start.md"
+            ".claude/commands/plan.md"
+            ".claude/commands/build.md"
+            ".claude/commands/review.md"
+            ".claude/memory/project.json"
+            "install.sh"
+            "README.md"
+            "LICENSE"
+            "CONTRIBUTING.md"
+            ".gitignore"
+          )
+
+          all_ok=true
+          for f in "${required_files[@]}"; do
+            if [ -f "$f" ]; then
+              echo "✓ $f"
+            else
+              echo "✗ MISSING: $f"
+              all_ok=false
+            fi
+          done
+
+          if [ "$all_ok" = false ]; then
+            echo ""
+            echo "One or more required files are missing."
+            exit 1
+          fi
+
+          echo ""
+          echo "All required files present."
+
+      - name: Validate agent frontmatter
+        run: |
+          echo "Checking agent frontmatter..."
+
+          check_frontmatter() {
+            local file="$1"
+            local field="$2"
+            if grep -q "^$field:" "$file"; then
+              echo "✓ $file has $field"
+            else
+              echo "✗ $file missing $field"
+              exit 1
+            fi
+          }
+
+          for agent in .claude/agents/*.md; do
+            check_frontmatter "$agent" "name"
+            check_frontmatter "$agent" "description"
+            check_frontmatter "$agent" "model"
+          done
+
+          echo "All agent frontmatter valid."
+
+      - name: Validate settings JSON
+        run: |
+          echo "Checking JSON validity..."
+          node -e "JSON.parse(require('fs').readFileSync('.claude/settings.json', 'utf8'))" && echo "✓ .claude/settings.json is valid JSON"
+          node -e "JSON.parse(require('fs').readFileSync('.claude/hooks/settings.json', 'utf8'))" && echo "✓ .claude/hooks/settings.json is valid JSON"
+          node -e "JSON.parse(require('fs').readFileSync('.claude/memory/project.json', 'utf8'))" && echo "✓ .claude/memory/project.json is valid JSON"
+
+      - name: Check install script is executable
+        run: |
+          if [ -x "install.sh" ]; then
+            echo "✓ install.sh is executable"
+          else
+            echo "✗ install.sh is not executable — run: chmod +x install.sh"
+            exit 1
+          fi
