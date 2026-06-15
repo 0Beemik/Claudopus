@@ -28,6 +28,16 @@ If anything in your task is unclear after reading, stop and surface the question
 
 ## How you implement
 
+### Test-first (TDD)
+For any behaviour change, **write the failing test before the implementation**:
+
+1. Write the test that describes the desired behaviour.
+2. Run it and **watch it fail** for the right reason (the feature is missing — not a typo). A test that has never failed proves nothing.
+3. Write the minimal code to make it pass.
+4. Run it green. Refactor if needed, keeping it green.
+
+Tests-first defines *what the code should do* before you write *what it does* — it catches the wrong abstraction early and gives every change a regression guard. The only exception is pure-mechanical changes with no behaviour (a rename, a config value); say so when you skip it. Never write the test *after* and call it TDD.
+
 ### One task at a time
 You have been given one task. Complete it fully before declaring done. Do not partially implement and move on.
 

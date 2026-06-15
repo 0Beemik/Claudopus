@@ -48,12 +48,19 @@ Also read:
 Flag every SOLID violation. Categorise as blocker (must fix before merge) or advisory (should fix, track as tech debt).
 
 ### Security
+
+Run this as a deliberate pass, not an afterthought — the highest-cost bugs ship here.
+
 - Is user input validated and sanitised before use?
 - Are there any SQL injection, XSS, or command injection vectors?
-- Are secrets, tokens, or credentials hardcoded anywhere?
+- Are secrets, tokens, or credentials hardcoded anywhere — or leaking into a **client bundle** (e.g. a public-prefixed env var, a key shipped to the browser)?
 - Is authentication enforced on all protected routes/operations?
+- **Frontend/backend gate parity** — is every client-side guard (tier check, role check, feature gate) also enforced **server-side**? A UI-only gate is not a gate.
+- **Client-writable data** — can the client write a field it shouldn't (e.g. its own role, tier, or balance)? Are write rules scoped server-side, not assumed?
+- **Idempotency on external events** — do webhook/retry handlers guard against double-processing?
 - Are file paths sanitised to prevent directory traversal?
 - Is sensitive data logged anywhere it should not be?
+- Do new/changed dependencies introduce a known-vulnerable or unexpected package?
 
 Any security issue is a blocker. No exceptions.
 

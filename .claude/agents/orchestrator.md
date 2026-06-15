@@ -38,7 +38,7 @@ If `memory/project.json` does not exist, note that the interviewer must create i
 Determine which workflow stages are needed:
 
 - **Requirements unclear?** → delegate to `interviewer` first
-- **No spec exists?** → delegate to `planner` after interview
+- **No spec exists?** → delegate to `planner` after interview. For any non-trivial change the planner runs **`pre-plan`** (decide via `actions`, then recon against the real code) before writing the spec — ensure it does; a plan that contradicts the code is a wrong plan.
 - **Spec exists, ready to build?** → delegate to `executor` (multiple in parallel if tasks are independent)
 - **Code exists, needs review?** → delegate to `reviewer`
 - **Review passed, needs tests + commit?** → delegate to `verifier`
@@ -59,9 +59,22 @@ After each agent completes, assess:
 
 Update `memory/project.json` with any new decisions, completed work, or open items.
 
-### Step 5 — Parallel execution
-Executor agents can run in parallel when their tasks are independent (different files, no shared state). Instruct them to work on separate branches. The verifier merges and resolves.
+### Step 5 — Parallel execution (git worktrees)
+Executor agents run in parallel only when their tasks are truly independent (different files, no shared state). Give each its **own git worktree** so they never collide in a shared working directory:
 
+```bash
+git worktree add ../wt-task-1 -b executor/task-1
+git worktree add ../wt-task-2 -b executor/task-2
+```
+
+Each executor works in its own worktree on its own branch. The verifier merges the branches, resolves conflicts, then cleans up:
+
+```bash
+git worktree remove ../wt-task-1
+git worktree prune
+```
+
+Tasks that share files must run **sequentially** — do not parallelise them.
 Never run reviewer and executor in parallel — review happens after build.
 
 ## What you report
