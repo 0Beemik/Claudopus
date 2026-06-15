@@ -32,3 +32,15 @@ The more you give, the less time the interview phase takes. You can include:
 - What done looks like to you
 
 The orchestrator will use everything you provide and only ask what is genuinely missing.
+
+## Running with minimal interruption
+
+Claudopus ships with `"permissions": { "defaultMode": "acceptEdits" }` in `settings.json`: file edits auto-approve and the common build commands auto-approve via the bash allow-list, while the `deny` list + `bash-safety` hook still guard dangerous commands. That's the smooth default — the pipeline runs without prompting on every edit.
+
+For a **fully autonomous, hands-off run** (no prompts at all), launch in a sandboxed/throwaway workspace with:
+
+```
+claude --permission-mode bypassPermissions
+```
+
+`bypassPermissions` disables **all** permission checks — including the deny list. Use it only where a mistake can't hurt anything real (a container, a scratch clone). There is no `auto` mode; the valid values are `default`, `plan`, `acceptEdits`, `dontAsk`, `bypassPermissions`.
