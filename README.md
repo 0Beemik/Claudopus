@@ -31,18 +31,13 @@ Every agent has a defined role, a specific model, and a clear handoff protocol. 
 
 ## Why Claudopus
 
-Projects like [oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent) and [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex) do impressive work — but they bolt orchestration on top of CLIs that weren't designed for it. The result is tmux pane coordination, stale state recovery, fallback chains across 10+ model providers, and hundreds of files of infrastructure just to run parallel agents.
+Claudopus uses **Claude Code's native subagent system** — the orchestration layer Anthropic built. No tmux panes, no filesystem mailboxes, no provider fallback chains, no runtime to install. Just files Claude Code already knows how to read.
 
-Claudopus uses **Claude Code's native subagent system** — the orchestration layer Anthropic built. Less engineering, better results.
-
-| | oh-my-openagent | Claudopus |
-|---|---|---|
-| Underlying executor | OpenCode / Claude Code CLI | Claude Code native subagents |
-| Model support | 10+ providers, fallback chains | Opus 4.8 (tiered effort) |
-| Setup | npm install + configure | copy a folder |
-| Total files | 95+ utility files | 14 markdown + 2 JSON |
-| State coordination | tmux panes + filesystem mailboxes | Claude Code handles it |
-| Customisation | TypeScript config schemas | edit markdown files |
+- **Native subagents.** The orchestrator spawns the interviewer, planner, executor, reviewer, and verifier as real Claude Code subagents — each with its own context window and a clear handoff. No orchestration abstraction bolted on top.
+- **One model, tiered by effort.** Opus 4.8 throughout — `max` for reasoning and review, `high` for build and verify. One mental model, no fallback chains.
+- **Pre-planning that's real.** Every non-trivial change is *decided* (the `actions` framework — past/present/future) and *reconned* against the actual code at line precision **before** a plan is written. The plan is grounded in the codebase, not assumptions.
+- **Discipline baked in.** TDD-first execution, evidence-before-done verification, a deliberate security pass, and git-worktree isolation for parallel work.
+- **Just files.** Markdown + JSON. Copy a folder to install; edit markdown to customise. Zero dependencies, nothing to keep running.
 
 ---
 
