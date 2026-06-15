@@ -5,9 +5,12 @@ Generate an implementation plan for a well-defined task. Use this when requireme
 ## What happens
 
 1. The planner agent reads the codebase and your task
-2. Produces a structured plan in `memory/plans/`
-3. Updates `memory/project.json`
-4. Reports the plan for your review before any code is written
+2. Runs **`pre-plan`** on non-trivial changes — decides the approach (`actions`) then recons it against the real code at line precision → a validated revision list
+3. Produces a structured plan in `memory/plans/` with the recon revisions folded in
+4. Updates `memory/project.json`
+5. Reports the plan for your review before any code is written
+
+Run `/pre-plan` on its own first if you want to see the decide/recon brief before a plan is written.
 
 ## Usage
 
@@ -17,14 +20,14 @@ Generate an implementation plan for a well-defined task. Use this when requireme
 /plan create a caching layer for the jobs API endpoint
 ```
 
-## When to use `/plan` vs `/start`
+## When to use `/plan` vs `/claudopus`
 
 Use `/plan` when:
 - Requirements are completely clear
 - You want to review the plan before committing to implementation
 - You want a plan for discussion without immediately building
 
-Use `/start` when:
+Use `/claudopus` when:
 - Requirements may need clarification
 - You want the full pipeline from task to shipped code
 

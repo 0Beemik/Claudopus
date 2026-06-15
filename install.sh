@@ -7,7 +7,7 @@
 
 set -e
 
-CLAUDOPUS_VERSION="1.0.0"
+CLAUDOPUS_VERSION="1.1.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$SCRIPT_DIR/.claude"
 
@@ -125,8 +125,11 @@ validate_install() {
     "skills/review.md"
     "skills/verify.md"
     "skills/commit.md"
+    "skills/actions.md"
+    "skills/pre-plan.md"
     "hooks/settings.json"
-    "commands/start.md"
+    "commands/claudopus.md"
+    "commands/pre-plan.md"
     "commands/plan.md"
     "commands/build.md"
     "commands/review.md"
@@ -160,7 +163,7 @@ print_next_steps() {
   echo "  Open your project in VS Code and start Claude Code."
   echo ""
   echo "  Commands:"
-  echo "    /start   — begin a new task (full pipeline)"
+  echo "    /claudopus   — begin a new task (full pipeline)"
   echo "    /plan    — generate a plan for a clear task"
   echo "    /build   — execute the current plan"
   echo "    /review  — audit current code"

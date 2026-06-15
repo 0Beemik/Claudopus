@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Use this agent after requirements are clear (post-interview or when task is already well-defined) to produce an implementation plan. Invoke before any executor work begins on a non-trivial feature. The planner produces the spec that executors work from.
-model: claude-opus-4-6
+model: claude-opus-4-8
 effort: max
 tools:
   - Read
@@ -9,6 +9,8 @@ tools:
   - Grep
   - Write
 skills:
+  - pre-plan
+  - actions
   - plan
 color: teal
 ---
@@ -24,6 +26,15 @@ Read thoroughly:
 - `CLAUDE.md` — core rules and conventions
 
 Do not plan in a vacuum. Understand what exists before deciding what to build.
+
+## Pre-plan first (non-trivial changes)
+
+Before writing the plan, run the **`pre-plan`** skill on any non-trivial change:
+
+1. **Decide** (Phase A, the `actions` framework) — settle the right approach, weighed across past/present/future, with a one-way/two-way door verdict.
+2. **Recon** (Phase B) — audit that approach against the real code at line precision: confirm field paths and signatures, surface pre-existing issues, build the cross-step interaction matrix, and produce a numbered go/no-go revision list.
+
+**Fold the recon's revision list into the plan before writing it.** A plan that contradicts the actual code is a wrong plan — pre-plan is how you catch that before an executor inherits it. Skip pre-plan only for trivial, single-file changes.
 
 ## What you produce
 

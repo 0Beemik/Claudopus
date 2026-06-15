@@ -1,6 +1,6 @@
 # Claudopus 🐙
 
-> Multi-agent engineering for Claude Code. Opus 4.6 thinks. Sonnet 4.6 builds.
+> Multi-agent engineering for Claude Code. One model — Opus 4.8 — tiered by effort: `max` reasons and reviews, `high` builds and verifies.
 
 **Claudopus is a `.claude/` directory** — a set of agent definitions, skills, commands, and rules that transforms Claude Code from a single assistant into a coordinated engineering team.
 
@@ -13,16 +13,16 @@ No new tools. No new CLIs. No tmux gymnastics. Works inside your existing VS Cod
 You describe what you want. The orchestrator coordinates a team of specialized agents and ships working code.
 
 ```
-/start add a password reset flow
+/claudopus add a password reset flow
 ```
 
 ```
-orchestrator (Opus 4.6)
+orchestrator (Opus 4.8)
   ├── interviewer  → clarifies scope, eliminates ambiguity
   ├── planner      → produces an executable implementation plan
-  ├── executor ×N  → implements in parallel on isolated branches  (Sonnet 4.6)
+  ├── executor ×N  → implements in parallel on isolated branches  (Opus 4.8)
   ├── reviewer     → audits correctness, security, SOLID compliance
-  └── verifier     → runs tests, validates, commits clean code     (Sonnet 4.6)
+  └── verifier     → runs tests, validates, commits clean code     (Opus 4.8)
 ```
 
 Every agent has a defined role, a specific model, and a clear handoff protocol. The orchestrator reads your project memory and routes work to the right agent at each stage.
@@ -31,18 +31,13 @@ Every agent has a defined role, a specific model, and a clear handoff protocol. 
 
 ## Why Claudopus
 
-Projects like [oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent) and [oh-my-codex](https://github.com/Yeachan-Heo/oh-my-codex) do impressive work — but they bolt orchestration on top of CLIs that weren't designed for it. The result is tmux pane coordination, stale state recovery, fallback chains across 10+ model providers, and hundreds of files of infrastructure just to run parallel agents.
+Claudopus uses **Claude Code's native subagent system** — the orchestration layer Anthropic built. No tmux panes, no filesystem mailboxes, no provider fallback chains, no runtime to install. Just files Claude Code already knows how to read.
 
-Claudopus uses **Claude Code's native subagent system** — the orchestration layer Anthropic built. Less engineering, better results.
-
-| | oh-my-openagent | Claudopus |
-|---|---|---|
-| Underlying executor | OpenCode / Claude Code CLI | Claude Code native subagents |
-| Model support | 10+ providers, fallback chains | Opus 4.6 + Sonnet 4.6 |
-| Setup | npm install + configure | copy a folder |
-| Total files | 95+ utility files | 14 markdown + 2 JSON |
-| State coordination | tmux panes + filesystem mailboxes | Claude Code handles it |
-| Customisation | TypeScript config schemas | edit markdown files |
+- **Native subagents.** The orchestrator spawns the interviewer, planner, executor, reviewer, and verifier as real Claude Code subagents — each with its own context window and a clear handoff. No orchestration abstraction bolted on top.
+- **One model, tiered by effort.** Opus 4.8 throughout — `max` for reasoning and review, `high` for build and verify. One mental model, no fallback chains.
+- **Pre-planning that's real.** Every non-trivial change is *decided* (the `actions` framework — past/present/future) and *reconned* against the actual code at line precision **before** a plan is written. The plan is grounded in the codebase, not assumptions.
+- **Discipline baked in.** TDD-first execution, evidence-before-done verification, a deliberate security pass, and git-worktree isolation for parallel work.
+- **Just files.** Markdown + JSON. Copy a folder to install; edit markdown to customise. Zero dependencies, nothing to keep running.
 
 ---
 
@@ -94,7 +89,7 @@ Once installed, these are available inside Claude Code:
 
 | Command | What it does |
 |---|---|
-| `/start [task]` | Full pipeline — interview → plan → build → review → verify |
+| `/claudopus [task]` | Full pipeline — interview → plan → build → review → verify |
 | `/plan [task]` | Generate a plan without building yet |
 | `/build` | Execute the current plan |
 | `/build [task-name]` | Execute one specific task |
@@ -107,12 +102,12 @@ Once installed, these are available inside Claude Code:
 
 | Agent | Model | Role |
 |---|---|---|
-| `orchestrator` | Opus 4.6 `effort: max` | Routes tasks, coordinates agents, manages the lifecycle |
-| `interviewer` | Opus 4.6 `effort: max` | Socratic clarification before any planning |
-| `planner` | Opus 4.6 `effort: max` | Converts requirements into executable specs |
-| `executor` | Sonnet 4.6 `effort: high` | Implements tasks — runs in parallel for independent work |
-| `reviewer` | Opus 4.6 `effort: max` | Correctness, security, SOLID compliance audit |
-| `verifier` | Sonnet 4.6 `effort: high` | Tests, build validation, final commit |
+| `orchestrator` | Opus 4.8 `effort: max` | Routes tasks, coordinates agents, manages the lifecycle |
+| `interviewer` | Opus 4.8 `effort: max` | Socratic clarification before any planning |
+| `planner` | Opus 4.8 `effort: max` | Converts requirements into executable specs |
+| `executor` | Opus 4.8 `effort: high` | Implements tasks — runs in parallel for independent work |
+| `reviewer` | Opus 4.8 `effort: max` | Correctness, security, SOLID compliance audit |
+| `verifier` | Opus 4.8 `effort: high` | Tests, build validation, final commit |
 
 ---
 
@@ -150,12 +145,12 @@ The orchestrator reads this at the start of every session. Architectural decisio
 ├── settings.json                ← model config, permissions, hooks
 │
 ├── agents/
-│   ├── orchestrator.md          ← Opus 4.6 — coordinates everything
-│   ├── interviewer.md           ← Opus 4.6 — clarifies requirements
-│   ├── planner.md               ← Opus 4.6 — produces implementation specs
-│   ├── executor.md              ← Sonnet 4.6 — parallel implementation worker
-│   ├── reviewer.md              ← Opus 4.6 — code review and security audit
-│   └── verifier.md              ← Sonnet 4.6 — tests, validation, commit
+│   ├── orchestrator.md          ← Opus 4.8 — coordinates everything
+│   ├── interviewer.md           ← Opus 4.8 — clarifies requirements
+│   ├── planner.md               ← Opus 4.8 — produces implementation specs
+│   ├── executor.md              ← Opus 4.8 — parallel implementation worker
+│   ├── reviewer.md              ← Opus 4.8 — code review and security audit
+│   └── verifier.md              ← Opus 4.8 — tests, validation, commit
 │
 ├── skills/
 │   ├── deep-interview.md        ← Socratic clarification process
@@ -166,7 +161,7 @@ The orchestrator reads this at the start of every session. Architectural decisio
 │   └── commit.md                ← conventional commit format
 │
 ├── commands/
-│   ├── start.md                 ← /start
+│   ├── claudopus.md                 ← /claudopus
 │   ├── plan.md                  ← /plan
 │   ├── build.md                 ← /build
 │   └── review.md                ← /review
@@ -203,7 +198,7 @@ Drop a markdown file into `.claude/agents/`:
 ---
 name: database-specialist
 description: Use this agent for schema changes, migrations, or query optimisation.
-model: claude-opus-4-6
+model: claude-opus-4-8
 effort: high
 tools:
   - Read
