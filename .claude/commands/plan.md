@@ -17,14 +17,14 @@ Generate an implementation plan for a well-defined task. Use this when requireme
 /plan create a caching layer for the jobs API endpoint
 ```
 
-## When to use `/plan` vs `/start`
+## When to use `/plan` vs `/claudopus`
 
 Use `/plan` when:
 - Requirements are completely clear
 - You want to review the plan before committing to implementation
 - You want a plan for discussion without immediately building
 
-Use `/start` when:
+Use `/claudopus` when:
 - Requirements may need clarification
 - You want the full pipeline from task to shipped code
 

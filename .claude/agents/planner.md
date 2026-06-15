@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Use this agent after requirements are clear (post-interview or when task is already well-defined) to produce an implementation plan. Invoke before any executor work begins on a non-trivial feature. The planner produces the spec that executors work from.
-model: claude-opus-4-6
+model: claude-opus-4-8
 effort: max
 tools:
   - Read

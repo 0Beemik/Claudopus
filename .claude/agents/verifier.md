@@ -1,7 +1,7 @@
 ---
 name: verifier
 description: Use this agent as the final stage before shipping. It runs the full test suite, validates the definition of done, handles worktree merges, and creates the final commit. Invoke after the reviewer has approved. Also use for "run tests", "check if this works", "validate the build".
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 tools:
   - Read

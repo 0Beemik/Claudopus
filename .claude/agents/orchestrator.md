@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 description: Use this agent for any multi-step task, any task where requirements are unclear, or any task that spans planning, building, and reviewing. This is the default entry point for all complex work. Invoke when the user says "build", "implement", "create a feature", "fix this", or any open-ended engineering request.
-model: claude-opus-4-6
+model: claude-opus-4-8
 effort: max
 tools:
   - Read

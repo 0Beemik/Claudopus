@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Use this agent after executor work is complete to review code for correctness, quality, security, and architectural integrity. Also use for standalone code review requests — "review this PR", "audit this module", "check this for security issues". The reviewer reads only — it does not modify files.
-model: claude-opus-4-6
+model: claude-opus-4-8
 effort: max
 tools:
   - Read

@@ -15,12 +15,12 @@ Full Claudopus `.claude/` system — 20 files across 6 directories plus install 
 |---|---|
 | `.claude/CLAUDE.md` | Master identity, rules, agent routing table, git conventions |
 | `.claude/settings.json` | Model config, bash permissions, hooks registration |
-| `.claude/agents/orchestrator.md` | Opus 4.6 — routes tasks, coordinates all agents |
-| `.claude/agents/interviewer.md` | Opus 4.6 — Socratic clarification before planning |
-| `.claude/agents/planner.md` | Opus 4.6 — converts requirements to executable specs |
-| `.claude/agents/executor.md` | Sonnet 4.6 — parallel implementation worker |
-| `.claude/agents/reviewer.md` | Opus 4.6 — correctness, security, SOLID audit |
-| `.claude/agents/verifier.md` | Sonnet 4.6 — tests, build validation, commit |
+| `.claude/agents/orchestrator.md` | Opus 4.8 — routes tasks, coordinates all agents |
+| `.claude/agents/interviewer.md` | Opus 4.8 — Socratic clarification before planning |
+| `.claude/agents/planner.md` | Opus 4.8 — converts requirements to executable specs |
+| `.claude/agents/executor.md` | Opus 4.8 — parallel implementation worker |
+| `.claude/agents/reviewer.md` | Opus 4.8 — correctness, security, SOLID audit |
+| `.claude/agents/verifier.md` | Opus 4.8 — tests, build validation, commit |
 | `.claude/skills/deep-interview.md` | Clarification workflow |
 | `.claude/skills/plan.md` | Spec generation process |
 | `.claude/skills/build.md` | Implementation loop and standards |
@@ -28,7 +28,7 @@ Full Claudopus `.claude/` system — 20 files across 6 directories plus install 
 | `.claude/skills/verify.md` | Test and ship checklist |
 | `.claude/skills/commit.md` | Conventional commit format |
 | `.claude/hooks/settings.json` | SubagentStop, Stop, PreToolUse handlers |
-| `.claude/commands/start.md` | /start — full pipeline entry point |
+| `.claude/commands/claudopus.md` | /claudopus — full pipeline entry point |
 | `.claude/commands/plan.md` | /plan — planning without building |
 | `.claude/commands/build.md` | /build — execute current plan |
 | `.claude/commands/review.md` | /review — standalone code review |
@@ -44,15 +44,15 @@ Full Claudopus `.claude/` system — 20 files across 6 directories plus install 
 
 ## Architecture decisions
 - Native Claude Code subagent system — no external orchestration layer
-- Opus 4.6 for reasoning agents (orchestrator, interviewer, planner, reviewer)
-- Sonnet 4.6 for execution agents (executor, verifier)
+- Opus 4.8 for reasoning agents (orchestrator, interviewer, planner, reviewer)
+- Opus 4.8 for execution agents (executor, verifier)
 - Zero external dependencies — 14 markdown + 2 JSON + 1 bash script
 - Project-scoped install recommended; global install supported
 
 ## Next actions
 1. `git init` and push to GitHub as a standalone repo
 2. Add `memory/project.json` entries for your specific project stack
-3. Run `/start [your first task]` in Claude Code
+3. Run `/claudopus [your first task]` in Claude Code
 4. Optionally: append project-specific rules to `CLAUDE.md`
 
 ## Known open items

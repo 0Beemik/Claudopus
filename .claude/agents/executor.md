@@ -1,7 +1,7 @@
 ---
 name: executor
 description: Use this agent to implement a specific, well-defined task from an existing plan. This agent writes code, creates files, and runs commands. Spawn multiple executor instances in parallel for independent tasks. Always provide the task details, relevant file paths, and the plan reference in the prompt — the executor starts with a fresh context window.
-model: claude-sonnet-4-6
+model: claude-opus-4-8
 effort: high
 tools:
   - Read

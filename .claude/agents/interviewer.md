@@ -1,7 +1,7 @@
 ---
 name: interviewer
 description: Use this agent when requirements are vague, incomplete, or when a task has unstated assumptions that could derail implementation. Invoke before planning any non-trivial feature. Examples — "build me a dashboard", "add authentication", "refactor the API layer". Do not use for small, clearly-scoped tasks like "fix this typo" or "add this specific field".
-model: claude-opus-4-6
+model: claude-opus-4-8
 effort: max
 tools:
   - Read
