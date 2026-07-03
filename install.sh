@@ -7,7 +7,7 @@
 
 set -e
 
-CLAUDOPUS_VERSION="1.1.0"
+CLAUDOPUS_VERSION="1.2.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$SCRIPT_DIR/.claude"
 
@@ -27,7 +27,7 @@ print_header() {
   echo -e "${BLUE}  ╔═══════════════════════════════╗${NC}"
   echo -e "${BLUE}  ║        Claudopus v${CLAUDOPUS_VERSION}        ║${NC}"
   echo -e "${BLUE}  ║  Multi-agent engineering for  ║${NC}"
-  echo -e "${BLUE}  ║  Claude Code — Opus + Sonnet  ║${NC}"
+  echo -e "${BLUE}  ║  Claude Code — Fable + Opus   ║${NC}"
   echo -e "${BLUE}  ╚═══════════════════════════════╝${NC}"
   echo ""
 }
@@ -119,6 +119,7 @@ validate_install() {
     "agents/executor.md"
     "agents/reviewer.md"
     "agents/verifier.md"
+    "agents/auditor.md"
     "skills/deep-interview.md"
     "skills/plan.md"
     "skills/build.md"

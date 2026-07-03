@@ -1,6 +1,6 @@
 # Claudopus 🐙
 
-> Multi-agent engineering for Claude Code. One model — Opus 4.8 — tiered by effort: `max` reasons and reviews, `high` builds and verifies.
+> Multi-agent engineering for Claude Code. Two models tiered by leverage — **Fable 5** reasons, plans, reviews, and audits; **Opus 4.8** builds and verifies. Effort scales to what's at stake.
 
 **Claudopus is a `.claude/` directory** — a set of agent definitions, skills, commands, and rules that transforms Claude Code from a single assistant into a coordinated engineering team.
 
@@ -17,12 +17,13 @@ You describe what you want. The orchestrator coordinates a team of specialized a
 ```
 
 ```
-orchestrator (Opus 4.8)
-  ├── interviewer  → clarifies scope, eliminates ambiguity
-  ├── planner      → produces an executable implementation plan
-  ├── executor ×N  → implements in parallel on isolated branches  (Opus 4.8)
-  ├── reviewer     → audits correctness, security, SOLID compliance
-  └── verifier     → runs tests, validates, commits clean code     (Opus 4.8)
+orchestrator (Fable 5)
+  ├── interviewer  → clarifies scope, eliminates ambiguity           (Fable 5)
+  ├── planner      → produces an executable implementation plan      (Fable 5)
+  ├── executor ×N  → implements in parallel on isolated branches     (Opus 4.8)
+  ├── reviewer     → audits correctness, security, SOLID compliance  (Fable 5)
+  ├── verifier     → runs tests, validates, commits clean code       (Opus 4.8)
+  └── auditor      → final sign-off: intent, coherence, readiness    (Fable 5)
 ```
 
 Every agent has a defined role, a specific model, and a clear handoff protocol. The orchestrator reads your project memory and routes work to the right agent at each stage.
@@ -33,8 +34,8 @@ Every agent has a defined role, a specific model, and a clear handoff protocol. 
 
 Claudopus uses **Claude Code's native subagent system** — the orchestration layer Anthropic built. No tmux panes, no filesystem mailboxes, no provider fallback chains, no runtime to install. Just files Claude Code already knows how to read.
 
-- **Native subagents.** The orchestrator spawns the interviewer, planner, executor, reviewer, and verifier as real Claude Code subagents — each with its own context window and a clear handoff. No orchestration abstraction bolted on top.
-- **One model, tiered by effort.** Opus 4.8 throughout — `max` for reasoning and review, `high` for build and verify. One mental model, no fallback chains.
+- **Native subagents.** The orchestrator spawns the interviewer, planner, executor, reviewer, verifier, and auditor as real Claude Code subagents — each with its own context window and a clear handoff. No orchestration abstraction bolted on top.
+- **Two models, tiered by leverage.** **Claude Fable 5** — Anthropic's most capable model — runs the reasoning and judgment core: `effort: max` where the whole run pivots on getting it right (orchestrator, planner, auditor) and `effort: medium` for the focused Fable work (interviewer, reviewer). **Claude Opus 4.8** runs the high-volume build and verify path at `effort: high` (executor, verifier). The premium model sits where correctness compounds; the efficient model carries the throughput.
 - **Pre-planning that's real.** Every non-trivial change is *decided* (the `actions` framework — past/present/future) and *reconned* against the actual code at line precision **before** a plan is written. The plan is grounded in the codebase, not assumptions.
 - **Discipline baked in.** TDD-first execution, evidence-before-done verification, a deliberate security pass, and git-worktree isolation for parallel work.
 - **Just files.** Markdown + JSON. Copy a folder to install; edit markdown to customise. Zero dependencies, nothing to keep running.
@@ -89,7 +90,7 @@ Once installed, these are available inside Claude Code:
 
 | Command | What it does |
 |---|---|
-| `/claudopus [task]` | Full pipeline — interview → plan → build → review → verify |
+| `/claudopus [task]` | Full pipeline — interview → plan → build → review → verify → audit |
 | `/plan [task]` | Generate a plan without building yet |
 | `/build` | Execute the current plan |
 | `/build [task-name]` | Execute one specific task |
@@ -102,12 +103,13 @@ Once installed, these are available inside Claude Code:
 
 | Agent | Model | Role |
 |---|---|---|
-| `orchestrator` | Opus 4.8 `effort: max` | Routes tasks, coordinates agents, manages the lifecycle |
-| `interviewer` | Opus 4.8 `effort: max` | Socratic clarification before any planning |
-| `planner` | Opus 4.8 `effort: max` | Converts requirements into executable specs |
+| `orchestrator` | Fable 5 `effort: max` | Routes tasks, coordinates agents, manages the lifecycle |
+| `interviewer` | Fable 5 `effort: medium` | Socratic clarification before any planning |
+| `planner` | Fable 5 `effort: max` | Converts requirements into executable specs |
 | `executor` | Opus 4.8 `effort: high` | Implements tasks — runs in parallel for independent work |
-| `reviewer` | Opus 4.8 `effort: max` | Correctness, security, SOLID compliance audit |
+| `reviewer` | Fable 5 `effort: medium` | Correctness, security, SOLID compliance audit |
 | `verifier` | Opus 4.8 `effort: high` | Tests, build validation, final commit |
+| `auditor` | Fable 5 `effort: max` | Final sign-off — intent fidelity, whole-system coherence, production readiness |
 
 ---
 
@@ -145,12 +147,13 @@ The orchestrator reads this at the start of every session. Architectural decisio
 ├── settings.json                ← model config, permissions, hooks
 │
 ├── agents/
-│   ├── orchestrator.md          ← Opus 4.8 — coordinates everything
-│   ├── interviewer.md           ← Opus 4.8 — clarifies requirements
-│   ├── planner.md               ← Opus 4.8 — produces implementation specs
+│   ├── orchestrator.md          ← Fable 5 — coordinates everything
+│   ├── interviewer.md           ← Fable 5 — clarifies requirements
+│   ├── planner.md               ← Fable 5 — produces implementation specs
 │   ├── executor.md              ← Opus 4.8 — parallel implementation worker
-│   ├── reviewer.md              ← Opus 4.8 — code review and security audit
-│   └── verifier.md              ← Opus 4.8 — tests, validation, commit
+│   ├── reviewer.md              ← Fable 5 — code review and security audit
+│   ├── verifier.md              ← Opus 4.8 — tests, validation, commit
+│   └── auditor.md               ← Fable 5 — final sign-off before ship
 │
 ├── skills/
 │   ├── deep-interview.md        ← Socratic clarification process
@@ -213,7 +216,7 @@ Claude Code picks it up automatically. No registration needed.
 
 ### Adjust model routing
 
-Want everything on Opus? Change the `model` field in `executor.md` and `verifier.md`. All decisions are in the frontmatter — no code to change.
+Every agent's model and effort live in its frontmatter — no code to change. Want the whole team on one model? Change the `model` field across `.claude/agents/*.md`. Prefer a different effort split? Adjust `effort` per agent. The defaults put Fable 5 on the reasoning core and Opus 4.8 on build/verify.
 
 ---
 
@@ -238,7 +241,7 @@ Claudopus is intentionally simple. See [CONTRIBUTING.md](CONTRIBUTING.md) for fu
 
 > The best AI coding system is one you understand completely.
 
-Claudopus is 14 markdown files and two JSON files. You can read every rule, every prompt, every decision it makes. You can change any of it. Nothing is a black box.
+Claudopus is a couple dozen markdown files and a few JSON files. You can read every rule, every prompt, every decision it makes. You can change any of it. Nothing is a black box.
 
 The complexity in other agent harnesses exists because they're building orchestration on top of CLIs that weren't designed for it. Claudopus uses the system Anthropic built. Less infrastructure, more results.
 
