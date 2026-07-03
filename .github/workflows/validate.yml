@@ -28,6 +28,7 @@ jobs:
             ".claude/agents/executor.md"
             ".claude/agents/reviewer.md"
             ".claude/agents/verifier.md"
+            ".claude/agents/auditor.md"
             ".claude/skills/deep-interview.md"
             ".claude/skills/plan.md"
             ".claude/skills/build.md"

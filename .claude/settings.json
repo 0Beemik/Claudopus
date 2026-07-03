@@ -1,5 +1,5 @@
 {
-  "model": "claude-opus-4-8",
+  "model": "claude-fable-5",
   "permissions": {
     "defaultMode": "acceptEdits",
     "allow": [
@@ -66,7 +66,7 @@
     ]
   },
   "env": {
-    "CLAUDOPUS_VERSION": "1.1.0",
+    "CLAUDOPUS_VERSION": "1.2.0",
     "CLAUDOPUS_LOG": "~/.claude/claudopus-agent-log.jsonl"
   },
   "includeCoAuthoredBy": false,

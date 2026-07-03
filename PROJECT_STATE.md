@@ -1,10 +1,18 @@
 # Claudopus — Project State
 
 ## Last updated
-2026-06-15
+2026-07-02
 
 ## Status
-`v1.1.0 — build-power upgrade shipped`
+`v1.2.0 — Fable 5 reasoning tier + auditor gate`
+
+## What changed in v1.2.0
+- **Two-model tiering.** Reasoning/judgment core → **Claude Fable 5**, tiered by stakes: `effort: max` (orchestrator, planner, auditor), `effort: medium` (interviewer, reviewer). Build/verify path stays **Opus 4.8** (`effort: high`): executor, verifier. Main-session default in `settings.json` → `claude-fable-5`.
+- **New `auditor` agent** (`.claude/agents/auditor.md`, Fable 5, read-only) — final independent sign-off: intent fidelity, whole-system coherence, regression surface, production readiness, gate integrity. Registered in CI required-files and `install.sh` manifest.
+- **Workflow lifecycle** now ends `… → verify → audit → ship`.
+- **Fable-tuned prompts.** Per Anthropic's Fable 5 guidance, the five Fable agents + `CLAUDE.md` gained a "Working on Claude Fable 5" section and were de-prescribed (goals/constraints over step-scripts; dropped "CRITICAL/YOU MUST" pressure). Role-matched guardrails: act-when-ready, simplest-thing-that-works, evidence-not-assertion, assess-before-acting, async delegation (orchestrator), report-everything-with-confidence (reviewer + auditor). Domain checklists kept. Executor/verifier (Opus 4.8) unchanged.
+- **Caveat:** Fable 5 needs 30-day data retention (not available under ZDR) — Fable-tier agents error on ZDR orgs; Opus-tier agents unaffected.
+- Shipped to `main`. README carries a forefront "Before you run it" callout (30-day retention requirement + re-install-to-get-auditor). Community-first, MIT.
 
 ## What changed in v1.1.0
 - All agents → **Claude Opus 4.8**, tiered by effort (`max` reasoning/review, `high` build/verify). No Sonnet.
@@ -55,7 +63,7 @@ Full Claudopus `.claude/` system — now 24 files across 6 directories plus inst
 
 ## Architecture decisions
 - Native Claude Code subagent system — no external orchestration layer
-- One model — Opus 4.8 — tiered by effort: `max` (orchestrator, interviewer, planner, reviewer), `high` (executor, verifier)
+- Two models tiered by leverage: **Fable 5** for the reasoning/judgment core — `effort: max` (orchestrator, planner, auditor), `effort: medium` (interviewer, reviewer); **Opus 4.8** at `effort: high` for the build/verify path (executor, verifier)
 - Pre-planning is the differentiator: `pre-plan` (decide + line-precision recon) runs before any non-trivial plan
 - Superpowers framework deliberately NOT imported — kept a tight, unified set; only TDD-first + verify-before-done principles folded in
 - Zero external dependencies — markdown + JSON + 1 bash script
