@@ -6,6 +6,13 @@
 
 No new tools. No new CLIs. No tmux gymnastics. Works inside your existing VS Code + Claude Code setup today.
 
+Claudopus is **community-first and MIT-licensed** — free to use, fork, and reshape. It's just markdown and JSON; every rule is readable and yours to change. Issues and PRs welcome.
+
+> ### ⚠️ Before you run it — two heads-ups
+>
+> 1. **Fable 5 needs 30-day data retention.** The five Fable-tier agents (orchestrator, planner, interviewer, reviewer, auditor) require a Claude org with **30-day data retention** — they are **not available under zero data retention (ZDR)** and will error there. The Opus 4.8 agents (executor, verifier) work either way. If your org is on ZDR, either enable retention or point the Fable agents at an Opus model in their frontmatter (see [Customising](#customising)).
+> 2. **Updating from an older Claudopus?** Re-run `./install.sh` (or re-copy `.claude/`) so you pick up the new **`auditor`** agent and the Fable-tuned prompts. A stale install silently misses the final audit gate.
+
 ---
 
 ## How it works

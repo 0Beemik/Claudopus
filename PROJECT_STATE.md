@@ -12,7 +12,7 @@
 - **Workflow lifecycle** now ends `… → verify → audit → ship`.
 - **Fable-tuned prompts.** Per Anthropic's Fable 5 guidance, the five Fable agents + `CLAUDE.md` gained a "Working on Claude Fable 5" section and were de-prescribed (goals/constraints over step-scripts; dropped "CRITICAL/YOU MUST" pressure). Role-matched guardrails: act-when-ready, simplest-thing-that-works, evidence-not-assertion, assess-before-acting, async delegation (orchestrator), report-everything-with-confidence (reviewer + auditor). Domain checklists kept. Executor/verifier (Opus 4.8) unchanged.
 - **Caveat:** Fable 5 needs 30-day data retention (not available under ZDR) — Fable-tier agents error on ZDR orgs; Opus-tier agents unaffected.
-- Branch: `fix/validate-workflow-command-list`. Not yet committed.
+- Shipped to `main`. README carries a forefront "Before you run it" callout (30-day retention requirement + re-install-to-get-auditor). Community-first, MIT.
 
 ## What changed in v1.1.0
 - All agents → **Claude Opus 4.8**, tiered by effort (`max` reasoning/review, `high` build/verify). No Sonnet.
