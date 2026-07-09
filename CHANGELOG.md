@@ -1,5 +1,15 @@
 # Changelog
 
+## Rebrand — Claudopus is now Omnipus (2026-07-09)
+
+This project has been rebranded from **Claudopus** to **Omnipus**, fusing
+the original multi-agent architecture with the Omni phase pipeline.
+The complete pre-rebrand state is preserved on the `claudopus-original` branch:
+https://github.com/0Beemik/Claudopus/tree/claudopus-original
+
+---
+
+
 All notable changes to Claudopus are documented here.
 
 Format: [Semantic Versioning](https://semver.org)
