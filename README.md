@@ -1,36 +1,47 @@
 # Omnipus
 
-**Omni × Claudopus** — one command that acts decisively, then proves it with independent agents.
+**One command that acts decisively, then earns the word "done" with independent proof.**
 
-Omni gave a single agent a disciplined phase pipeline (plan → build → verify → review → deliver).
-Claudopus split the work across *separate* agents so the reviewer can't share the builder's blind spots.
-Omnipus fuses them: a single `/omnipus <goal>` command that the main agent drives, but whose
-**VERIFY** and **REVIEW** phases are handed to **independently-spawned subagents**.
+Most AI coding help stops at "this should work." Omnipus doesn't. It plans, builds, and then
+hands the work to *separate* agents that run it and tear it apart — before it ever tells you it's
+finished. You get the speed of a single agent that just does the thing, plus the accountability of
+a team that checks it. `/omnipus <goal>` — that's the whole interface.
 
-## The core idea (and its honest limit)
+It's the fusion of two ideas:
+
+- **Omni** — a disciplined phase pipeline (plan → build → verify → review → deliver) that keeps a
+  single agent honest about its own process.
+- **Claudopus** — separation of powers: the reviewer is a *different* agent, so it can't inherit the
+  builder's blind spots.
+
+Omnipus takes the best of both and drops the ceremony neither needed.
+
+## The core idea
 
 > The builder does not certify its own build.
 
-Planning and building are done by the main agent. Verification and review are handed to subagents
-spawned via the Agent tool — a reviewer that never read the builder's transcript can't be fooled by
-its written rationalizations.
+Planning and building are the main agent's job. **Verification and review are handed to
+independently-spawned subagents** — a reviewer that never read the builder's reasoning can't be
+talked into agreeing with it. That's the difference between "I'm confident this works" and "a
+separate agent ran it and here's the output."
 
-**But be honest about what that buys.** A SKILL.md is a prompt, not an enforcer: the same agent
-decides to spawn the reviewer and reads its report, so this is a *discipline that raises the odds*
-of independent checking, not a structural guarantee. And a spawned reviewer is the *same model on
-the same code* — free of the transcript's blind spots, not the model's. For high-stakes correctness
-the real independence is a **runnable external check** (Ω3) and, where it matters, a **different-model
-reviewer**. Prefer machine evidence over a second opinion.
+This is a discipline, enforced by design, not by wishful thinking: the pipeline is built so the
+fastest path to "done" *runs through* the gates, not around them. And it's deliberately honest about
+where independence comes from — a runnable check (Ω3) is stronger than any second opinion, so
+Omnipus leans on evidence first and judgment second. That's not a limitation; it's the point. Proof
+beats persuasion every time.
 
 ## Operating stance — autonomous by default
 
-- **Auto mode.** Acts without asking and drives to completion. Normal forks are
-  resolved by picking the best option and noting it.
-- **Gate on machine evidence, not on questions** — the check is a subagent running the code.
-- **Absolute-permission stops only:** irreversible/destructive actions, and anything
-  `CLAUDE.md` gates (installs, downloads, model swaps, root steps). Those need an explicit "go."
-- **Guardrails stay.** "Autonomous" narrows what it *asks*, never what it *checks*. Rework, not
-  verification, is what actually costs time.
+Omnipus is built to finish things, not to ask permission to start them.
+
+- **Auto mode.** It acts and drives to completion. Normal decisions get made — best option, noted, keep moving.
+- **Evidence, not interrogation.** The gate is a subagent running your code, not a wall of questions.
+- **It stops for exactly one class of thing:** the irreversible and the destructive — deleting data
+  it didn't create, external sends, or anything a project's `CLAUDE.md` explicitly gates. There, and
+  only there, it asks first.
+- **Guardrails are a feature, not friction.** "Autonomous" narrows what it *asks*, never what it
+  *checks*. Rework is what actually costs you time — and Omnipus is built to not need it.
 
 ## The pipeline
 
@@ -43,7 +54,8 @@ reviewer**. Prefer machine evidence over a second opinion.
 | Ω5 RECONCILE | main agent | fix confirmed findings, re-verify |
 | Ω6 DELIVER | main agent | WHAT / PROOF / RESIDUAL, visualize if data |
 
-Trivial or non-executable tasks scale the subagent gates down (stated, never silent).
+Ceremony scales to the task: trivial or non-executable work skips the subagent gates — stated out
+loud, never silently.
 
 ## Install
 
@@ -54,13 +66,14 @@ mkdir -p ~/.claude/skills
 cp -rT .claude/skills/omnipus ~/.claude/skills/omnipus
 ```
 
-`cp -rT` copies *into* the target instead of nesting a second `omnipus/` inside it if the
-directory already exists. Then in any session: `/reload-skills`, and invoke with `/omnipus <goal>`.
+`cp -rT` copies *into* the target instead of nesting a second `omnipus/` inside it. Then run
+`/reload-skills` in any Claude Code session and invoke with `/omnipus <goal>`.
 
 ## Lineage
 
-- **Omni** — `../omni-SKILL.md`, the single-agent phase pipeline.
-- **Claudopus** — https://github.com/0Beemik/Claudopus, the seven-agent tiered system.
+- **Omni** — the single-agent phase pipeline.
+- **Claudopus** — the multi-agent tiered system this repo grew from (preserved in full on the
+  [`claudopus-original`](https://github.com/0Beemik/Omnipus/tree/claudopus-original) branch).
 
-Omnipus keeps Omni's light footprint and Claudopus's separation of powers, and drops the theater
-either one didn't need.
+Omnipus keeps Omni's light footprint and Claudopus's separation of powers. It doesn't promise
+magic — it promises *proof*, and that turns out to be the more useful thing.
