@@ -1,6 +1,6 @@
 ---
 name: actions
-description: Unified decision framework for all non-trivial actions. Combines root cause diagnosis (what went wrong) with deliberate decision-making (what should we do). Evaluates every action against past, present, and future before committing. Use before any bug fix, any architectural choice, any significant code change — and as Phase A of the pre-plan skill. Prevents shallow fixes AND reckless forward decisions.
+description: Unified decision framework for all non-trivial actions. Combines root cause diagnosis (what went wrong) with deliberate decision-making (what should we do). Enforces the Evidence Standard — complete 5W1H (Who/Where/What/When/Why/How) plus a calibrated probability per hypothesis, each anchored to something read or run — before any conclusion, and gates the final act on cost/reversibility so nothing irreversible fires on a hunch. Evaluates every action against past, present, and future. Use before any bug fix, any architectural choice, any significant code change — and as Phase A of the pre-plan skill. Prevents shallow fixes AND reckless forward decisions.
 ---
 
 # Actions
@@ -32,6 +32,36 @@ It is the full diagnostic method plus forward-looking deliberation — one skill
 ## Phase 1: Observe
 
 **Goal:** Understand the full situation before forming any opinion. Collect facts, not conclusions.
+
+### The Evidence Standard — 5W1H + Probability (satisfy this before any hypothesis)
+
+Complete evidence before a conclusion. Pin down all six dimensions, **each anchored
+to something you read or ran this session** — never memory, never assumption. An
+unknown is stated as an unknown with the confidence you'd assign, not silently
+dropped ("Who: unknown — 3 possible actors, need the ledger" is a valid cell).
+
+| | Question | Anchored to |
+|---|---|---|
+| **Who** | which actor / agent / tool / user produced it | ledger, transcript, call site |
+| **Where** | file:line, which phase, which module | the actual location, read this session |
+| **What** | the precise observed behavior — **quoted, not paraphrased** | real output / error text |
+| **When** | the trigger, the timing, what immediately preceded it | the sequence of events |
+| **Why** | root-cause hypothesis — the **mechanism, not the symptom** | a traced causal chain |
+| **How** | the mechanism that actually produces the behavior | the code path, not a guess |
+
+Then, for **each** candidate hypothesis:
+
+- **Probability** — a calibrated % that this is the cause (decisions: the right option).
+- **Discriminator** — the single piece of evidence that would most raise or falsify it.
+
+Rank candidates by probability. The top one is **not "the answer"** — it is the
+hypothesis to test first, using its discriminator. Never write a probability as
+100% unless you have run the thing and watched it. If you're at 60%, say 60% —
+and say what would take it to 90%.
+
+> This is the difference between a smart diagnosis and a lucky guess: a lucky
+> guess skips straight to a fix; a smart one states its confidence, names the
+> evidence that would change its mind, and tests the cheapest discriminator first.
 
 ### For bugs (reactive)
 
@@ -243,6 +273,23 @@ For each candidate/option:
 
 **Goal:** Execute with confidence. Only reached after Phase 5 is complete.
 
+### The probability bar (the go/no-go gate)
+
+State your confidence in the chosen action's outcome as a **%**, then let the
+action's *cost and reversibility* set the bar you must clear:
+
+- **Cheap and reversible (two-way door)** → act freely, even at low confidence.
+  Running the probe *is* the cheapest evidence, and it discriminates between
+  hypotheses. Don't over-analyze something you can undo in one step.
+- **Expensive or irreversible (one-way door)** — schema/data changes, external
+  sends, force pushes, **edits to a gated project's config** — → **hold** until
+  your top hypothesis clears a high bar **and** you've checked its discriminator.
+  Gather the missing evidence first; do not act on a hunch dressed as a fact.
+
+The trap this closes: reaching for a real change to something you can't cheaply
+undo while your top hypothesis is still at 40% and the discriminating evidence
+(the transcript, the log, the failing test) hasn't arrived yet. Wait for it.
+
 ### Rules
 
 - Apply ONLY the changes identified in Phase 5. Do not add extras.
@@ -263,13 +310,17 @@ After implementation, answer:
 ## Quick reference
 
 ```
-Phase 1: OBSERVE      — What's the full situation? (minimum 3 candidates/options)
+Phase 1: OBSERVE      — 5W1H + Probability per hypothesis (min 3 candidates, evidence-anchored)
 Phase 2: LOOK BACK    — Does this respect the past? (evidence-based elimination)
 Phase 3: LOOK AROUND  — Is this the best action now? (simplest, safest, smallest blast radius)
 Phase 4: LOOK FORWARD — What does this enable or prevent? (one-way vs two-way doors)
 Phase 5: SIMULATE     — Walk through it mentally (predict the exact outcome)
-Phase 6: ACT          — Execute with confidence (build, verify, done)
+Phase 6: ACT          — Clear the probability bar (cheap+reversible → go; irreversible → prove it first)
 ```
+
+The Evidence Standard in one line: **know Who/Where/What/When/Why/How, attach a
+calibrated probability to each hypothesis, test the cheapest discriminator first,
+and never fire an irreversible action on a hunch.**
 
 Never skip to Phase 6. The cost of phases 1-5 is minutes. The cost of skipping them is hours of wrong fixes and architectural regret.
 

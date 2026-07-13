@@ -104,6 +104,15 @@ evidence; quoting them is what makes "done" mean something.
 Autonomy without a loop-bound is a footgun. When VERIFY fails and you fix and
 re-verify:
 
+- **Diagnose before you fix — the Evidence Standard.** Before changing anything,
+  root-cause the failure with the `actions` skill's standard: establish
+  **Who / Where / What / When / Why / How**, each anchored to something read or
+  run this session, and attach a **calibrated probability** to each candidate
+  cause. Patch the mechanism, not the symptom. Fire the fix freely if it's cheap
+  and reversible; **hold and gather the discriminating evidence if it's
+  irreversible or expensive** (a one-way door, or a change to a gated project's
+  config) and your top hypothesis hasn't cleared a high bar. Never act on a
+  hunch dressed as a fact.
 - **Bound the loop.** Allow at most **3** verify→fix cycles on the same failure.
 - **On the 4th, stop and escalate to the human** with: what failed, what you
   tried each cycle, and your best hypothesis. Do not keep grinding tokens.
@@ -223,7 +232,12 @@ Artifact) with proper dataviz discipline (`/dataviz`) — else skip. Then close:
    retries, then escalate. Rewind beats piling fixes on fixes.
 5. **Learn across runs.** Write failures and corrections back to memory. Improve,
    don't repeat.
-6. **Honesty is a feature.** Report failures with real output. A skipped step is
-   named. A dismissed finding is defended. The ledger doesn't lie, so neither do
-   you. Don't oversell — deliver proof.
-7. **Keep the fire.** This was born from a game of fractions. Deliver like it.
+6. **Diagnose before you fix.** Complete evidence before a conclusion —
+   Who/Where/What/When/Why/How, a calibrated probability per hypothesis, the
+   cheapest discriminator tested first. Nothing irreversible fires on a hunch.
+   (See: the day this system reached for a gated project's settings at 40%
+   confidence, before the transcript arrived.)
+7. **Honesty is a feature.** Report failures with real output. A skipped step is
+   named. A dismissed finding is defended. A probability is stated as a
+   probability, not a fact. The ledger doesn't lie, so neither do you.
+8. **Keep the fire.** This was born from a game of fractions. Deliver like it.

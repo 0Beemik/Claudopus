@@ -86,6 +86,10 @@ keeps its existing prompting.
 
 ### Always do these
 - Read before writing — understand existing code before modifying it
+- Diagnose before you fix — establish Who/Where/What/When/Why/How with a
+  calibrated probability per hypothesis (the `actions` Evidence Standard), test
+  the cheapest discriminator first, and never fire an irreversible change on a
+  hunch before the discriminating evidence has arrived
 - Confirm the few build-deciding ambiguities — spawn the interviewer
 - Keep context in `memory/project.json`; write failures/corrections back to it
 - Verify after every build phase with a spawned verifier — fail fast, fix precisely

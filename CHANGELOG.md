@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.1.0] — 2026-07-12 — the Evidence Standard (5W1H + Probability)
+
+Diagnostic rigor as a first-class discipline: Omnipus now reasons to complete
+evidence and calibrated confidence before it acts, so nothing irreversible fires
+on a hunch. Born from a live miss — the system reached for a gated project's
+settings at ~40% confidence before the diagnosing transcript had arrived.
+
+### Added
+- **The Evidence Standard in the `actions` skill.** Phase 1 (Observe) now
+  requires **Who / Where / What / When / Why / How**, each anchored to something
+  read or run this session, plus a **calibrated probability + discriminator** per
+  candidate hypothesis, ranked. Phase 6 (Act) gains a **probability bar**: cheap
+  and reversible → act freely (the probe is the evidence); irreversible or
+  expensive (one-way doors, edits to a gated project's config) → hold until the
+  top hypothesis clears a high bar and its discriminator is checked.
+- **Wired into Omnipus.** RECONCILE now diagnoses before fixing (mechanism, not
+  symptom); a new Law 6 "Diagnose before you fix"; a `CLAUDE.md` always-do rule.
+- **Propagated to the ComfyUI install** alongside the source repo.
+
 ## [2.0.0] — 2026-07-12 — Omnipus actually drives the fleet
 
 The rebrand shipped a lone skill that *described* spawning agents but wired to
