@@ -1,5 +1,50 @@
 # Changelog
 
+## [2.0.0] — 2026-07-12 — Omnipus actually drives the fleet
+
+The rebrand shipped a lone skill that *described* spawning agents but wired to
+none — so it ran single-threaded and lost the model tiering. This release makes
+the fusion real: the Fable orchestrator now drives the Claudopus fleet.
+
+### Fixed (the core bug)
+- **The skill now spawns the real fleet.** `SKILL.md` was rewritten so every
+  Ω-phase is an explicit `Agent` spawn by `subagent_type` on its assigned model
+  — planner/reviewer/auditor on **Fable 5**, executor/verifier on **Opus 4.8**.
+  Removed the hedging prose ("nothing forces it to spawn a reviewer…") that read
+  as permission to skip delegation.
+- **Model tiering restored.** Delegating to the fleet is what puts Fable on
+  planning/audit and Opus on build/verify — the generic "spawn a subagent" path
+  had silently collapsed to a single model.
+- **`install.sh` ships the whole system,** not just the skill. Global installs
+  place agents/commands/skills and explain how to merge settings; `--project`
+  installs everything together (recommended).
+- **Dead hook references removed.** `settings.json` pointed at `on-stop.js` /
+  `bash-safety.js` that were never shipped; hooks are now self-contained inline.
+
+### Added
+- **Full lifecycle in the skill:** Ω0 triage → interview → pre-plan → plan →
+  build → verify → review → audit → reconcile → deliver.
+- **Autonomy-earned-by-understanding** stance: unattended drive only after
+  intent + acceptance criteria are locked.
+- **Circuit breaker:** ≤3 verify→fix cycles, then escalate; `/rewind` over
+  piling fixes.
+- **Run-ledger observability:** `SubagentStop` logs each spawn (agent + model)
+  to `~/.claude/omnipus-ledger.jsonl`; DELIVER reports the run from it.
+- **Learning memory:** `failure_patterns` in `memory/project.json`, written back
+  each run.
+- **Context governance** (`/compact` discipline) and the **whole-toolbox**
+  Tier-1/Tier-2 command map (`references/commands.md`) + tool map
+  (`references/tools.md`).
+- **Doc self-sync:** `version.json` + `references/SYNC.md` — install-time
+  staleness detector fetches fresh docs past a 60-day interval; the orchestrator
+  reconciles the maps on next run.
+- **Opt-in power features:** real worktree parallelism and push-notification
+  escalation, offered once per run.
+- **`/omnipus` command** and a **CI pipeline self-test** that fails if the skill
+  stops referencing the real fleet (regression guard for the original bug).
+
+---
+
 ## Rebrand — Claudopus is now Omnipus (2026-07-09)
 
 This project has been rebranded from **Claudopus** to **Omnipus**, fusing

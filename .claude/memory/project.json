@@ -1,5 +1,5 @@
 {
-  "_readme": "This file is the persistent memory for Claudopus. Read it at the start of every session. Update it at the end of every significant session. Do not delete fields — set them to null if unknown.",
+  "_readme": "This file is the persistent memory for Omnipus. Read it at the start of every session (at PLAN time). Update it at the end of every significant session. Do not delete fields — set them to null if unknown. Write confirmed failure patterns and user corrections into failure_patterns so future runs learn instead of repeating.",
   "project": {
     "name": null,
     "description": null,
@@ -30,6 +30,7 @@
     "commit_format": "type(scope): description"
   },
   "decisions": [],
+  "failure_patterns": [],
   "current_task": null,
   "open_items": [],
   "test_baseline": {

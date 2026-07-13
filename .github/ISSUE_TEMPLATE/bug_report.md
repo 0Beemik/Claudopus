@@ -18,7 +18,7 @@ labels: bug
 
 ## Which agent was active
 
-<!-- Check ~/.claude/claudopus-agent-log.jsonl for the agent sequence -->
+<!-- Check ~/.claude/omnipus-ledger.jsonl for the agent sequence -->
 
 ## Claude Code version
 

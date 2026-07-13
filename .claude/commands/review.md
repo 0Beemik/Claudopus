@@ -32,7 +32,7 @@ With a focus area, narrows the review to that concern.
 
 ## Using review standalone
 
-You do not need to be in a full Claudopus workflow to use `/review`. It works on any code — including code written manually or imported from elsewhere.
+You do not need to be in a full Omnipus workflow to use `/review`. It works on any code — including code written manually or imported from elsewhere.
 
 Useful for:
 - Reviewing a PR before merging

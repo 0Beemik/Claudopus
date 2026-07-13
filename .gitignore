@@ -3,3 +3,7 @@
 *.jsonl
 node_modules/
 .DS_Store
+
+# Omnipus doc self-sync artifacts (staged by install.sh, consumed by the orchestrator)
+.claude/skills/omnipus/references/_incoming/
+.claude/skills/omnipus/references/SYNC_PENDING

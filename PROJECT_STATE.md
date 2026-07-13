@@ -1,81 +1,74 @@
-# Claudopus — Project State
+# Omnipus — Project State
 
 ## Last updated
-2026-07-02
+2026-07-12
 
 ## Status
-`v1.2.0 — Fable 5 reasoning tier + auditor gate`
+`v2.0.0 — the Fable orchestrator actually drives the Claudopus fleet`
 
-## What changed in v1.2.0
-- **Two-model tiering.** Reasoning/judgment core → **Claude Fable 5**, tiered by stakes: `effort: max` (orchestrator, planner, auditor), `effort: medium` (interviewer, reviewer). Build/verify path stays **Opus 4.8** (`effort: high`): executor, verifier. Main-session default in `settings.json` → `claude-fable-5`.
-- **New `auditor` agent** (`.claude/agents/auditor.md`, Fable 5, read-only) — final independent sign-off: intent fidelity, whole-system coherence, regression surface, production readiness, gate integrity. Registered in CI required-files and `install.sh` manifest.
-- **Workflow lifecycle** now ends `… → verify → audit → ship`.
-- **Fable-tuned prompts.** Per Anthropic's Fable 5 guidance, the five Fable agents + `CLAUDE.md` gained a "Working on Claude Fable 5" section and were de-prescribed (goals/constraints over step-scripts; dropped "CRITICAL/YOU MUST" pressure). Role-matched guardrails: act-when-ready, simplest-thing-that-works, evidence-not-assertion, assess-before-acting, async delegation (orchestrator), report-everything-with-confidence (reviewer + auditor). Domain checklists kept. Executor/verifier (Opus 4.8) unchanged.
-- **Caveat:** Fable 5 needs 30-day data retention (not available under ZDR) — Fable-tier agents error on ZDR orgs; Opus-tier agents unaffected.
-- Shipped to `main`. README carries a forefront "Before you run it" callout (30-day retention requirement + re-install-to-get-auditor). Community-first, MIT.
+## What changed in v2.0.0
+The 2026-07-09 rebrand fused Omni + Claudopus in name but shipped a lone
+`skills/omnipus/SKILL.md` that *described* spawning agents without wiring to the
+fleet — so it ran single-threaded, lost the Fable/Opus tiering, and the
+installer only shipped the skill. This release makes the fusion real.
 
-## What changed in v1.1.0
-- All agents → **Claude Opus 4.8**, tiered by effort (`max` reasoning/review, `high` build/verify). No Sonnet.
-- Entry command **`/start` → `/claudopus`**; lifecycle now `interview → pre-plan → plan → build → review → verify → ship`.
-- New **`pre-plan`** skill (Decide via `actions` → Recon) + **`actions`** skill; `/pre-plan` command; planner runs pre-plan before writing the spec.
-- **TDD-first** (executor), **verify-before-done** (verifier), **stronger security pass** (reviewer), **git-worktree parallelism** (orchestrator).
-- `permissions.defaultMode: "acceptEdits"`; `bypassPermissions` documented as the sandboxed full-auto opt-in.
-- Deliberately did **not** import the superpowers framework (pre-plan already covers it; only TDD + verify principles folded in).
+- **SKILL.md rewritten** to drive the fleet: every Ω-phase is an explicit `Agent`
+  spawn by `subagent_type` on its model (planner/reviewer/auditor → Fable 5,
+  executor/verifier → Opus 4.8). Hedging prose removed.
+- **Full lifecycle:** Ω0 triage → interview → pre-plan → plan → build → verify →
+  review → audit → reconcile → deliver.
+- **New principles baked in:** autonomy-earned-by-understanding, circuit breaker
+  (≤3 verify→fix cycles → escalate), run-ledger observability, learning memory
+  (`failure_patterns`), context governance, whole-toolbox Tier-1/2 command map.
+- **Opt-in power features:** worktree parallelism + push-notification escalation.
+- **Doc self-sync:** `version.json` + `references/SYNC.md`; `install.sh` detects
+  staleness (60-day interval) and fetches fresh docs, orchestrator reconciles.
+- **`install.sh`** now ships the whole `.claude/` system; `--project` recommended.
+- **Fixed latent bug:** `settings.json` referenced `on-stop.js`/`bash-safety.js`
+  that were never shipped → hooks are now self-contained inline; ledger path
+  renamed to `~/.claude/omnipus-ledger.jsonl`; env → `OMNIPUS_VERSION`.
+- **New `/omnipus` command** + **CI pipeline self-test** that fails if the skill
+  stops referencing the real fleet (guards against the original regression).
 
-## What was built (v1.0.0 baseline)
-
-Full Claudopus `.claude/` system — now 24 files across 6 directories plus install script and README.
-
-### Files created (this session)
-| File | Purpose |
+## Files touched (this session)
+| File | Change |
 |---|---|
-| `.claude/CLAUDE.md` | Master identity, rules, agent routing table, git conventions |
-| `.claude/settings.json` | Model config, bash permissions, hooks registration |
-| `.claude/agents/orchestrator.md` | Opus 4.8 — routes tasks, coordinates all agents |
-| `.claude/agents/interviewer.md` | Opus 4.8 — Socratic clarification before planning |
-| `.claude/agents/planner.md` | Opus 4.8 — converts requirements to executable specs |
-| `.claude/agents/executor.md` | Opus 4.8 — parallel implementation worker |
-| `.claude/agents/reviewer.md` | Opus 4.8 — correctness, security, SOLID audit |
-| `.claude/agents/verifier.md` | Opus 4.8 — tests, build validation, commit |
-| `.claude/skills/deep-interview.md` | Clarification workflow |
-| `.claude/skills/plan.md` | Spec generation process |
-| `.claude/skills/build.md` | Implementation loop and standards |
-| `.claude/skills/review.md` | Review checklist |
-| `.claude/skills/verify.md` | Test and ship checklist |
-| `.claude/skills/commit.md` | Conventional commit format |
-| `.claude/skills/actions.md` | **(v1.1)** Rigid 6-phase decision/diagnosis framework |
-| `.claude/skills/pre-plan.md` | **(v1.1)** Decide (`actions`) → Recon build-prep skill |
-| `.claude/hooks/settings.json` | SubagentStop, Stop, PreToolUse handlers |
-| `.claude/commands/claudopus.md` | /claudopus — full pipeline entry point (was /start) |
-| `.claude/commands/pre-plan.md` | **(v1.1)** /pre-plan — decide + recon before a plan |
-| `.claude/commands/plan.md` | /plan — planning without building |
-| `.claude/commands/build.md` | /build — execute current plan |
-| `.claude/commands/review.md` | /review — standalone code review |
-| `.claude/memory/project.json` | Persistent project context scaffold |
-| `install.sh` | Installer — project or global scope |
-| `README.md` | Full documentation |
-
-## Agents used
-- None (planning and scaffolding session)
-
-## Current branch / worktree
-- No git repo initialised — files ready to be committed to a new repo
+| `.claude/skills/omnipus/SKILL.md` | Full rewrite — fleet-driving Ω-pipeline |
+| `.claude/skills/omnipus/references/commands.md` | New — Tier-1/2 command map |
+| `.claude/skills/omnipus/references/tools.md` | New — tool map |
+| `.claude/skills/omnipus/references/SYNC.md` | New — self-sync protocol |
+| `.claude/skills/omnipus/version.json` | New — sync manifest |
+| `.claude/commands/omnipus.md` | New — `/omnipus` entry point |
+| `.claude/CLAUDE.md` | Rebrand + new principles (autonomy/circuit-breaker/ledger/memory) |
+| `.claude/settings.json` | Self-contained ledger hooks; `OMNIPUS_*` env |
+| `.claude/hooks/settings.json` | Mirrored ledger hooks |
+| `.claude/memory/project.json` | Added `failure_patterns` |
+| `install.sh` | Ship whole system + doc self-sync detector |
+| `.github/workflows/validate.yml` | Rebrand + pipeline wiring self-test |
+| `.gitignore` | Ignore sync artifacts |
+| `README.md`, `CHANGELOG.md`, `PROJECT_STATE.md` | Docs |
 
 ## Architecture decisions
-- Native Claude Code subagent system — no external orchestration layer
-- Two models tiered by leverage: **Fable 5** for the reasoning/judgment core — `effort: max` (orchestrator, planner, auditor), `effort: medium` (interviewer, reviewer); **Opus 4.8** at `effort: high` for the build/verify path (executor, verifier)
-- Pre-planning is the differentiator: `pre-plan` (decide + line-precision recon) runs before any non-trivial plan
-- Superpowers framework deliberately NOT imported — kept a tight, unified set; only TDD-first + verify-before-done principles folded in
-- Zero external dependencies — markdown + JSON + 1 bash script
-- Project-scoped install recommended; global install supported
+- Main session = Fable 5 orchestrator (option "a"): holds the routing table +
+  `Agent` tool, spawns the fleet directly. No separate orchestrator-spawns-fleet
+  hop (avoids fragile nested delegation).
+- Full Claudopus lifecycle kept (interview + pre-plan) as the substantial-lane
+  default; Omni's task-scaling triage decides the lane.
+- Omnipus's own optimizations folded in, not lost: phase-gating, auto-mode,
+  non-executable handling, evidence discipline, DELIVER contract.
+- Bash detects doc staleness; the model reconciles the maps (a pure-bash
+  doc→prompt update is impossible).
+- Command control split: Tier-1 invokable vs Tier-2 recommend-only — honest
+  about what the model can actually fire.
 
 ## Next actions
-1. Smoke-test `/claudopus [a real task]` end-to-end and confirm the planner actually runs `pre-plan`
-2. Update `install.sh` file manifest if the new skills/commands aren't picked up
-3. Add `memory/project.json` entries for the target project stack
-4. Optionally: extract the inline-node hooks to `.js` files (v1.0 open item)
+1. Smoke-test `/omnipus [a real task]` end-to-end; confirm the ledger records the
+   fleet spawning and the models are tiered as expected.
+2. Confirm `install.sh --project` and the doc-sync date math on a real machine
+   (GNU + BSD date paths).
+3. Consider the optional always-on `/schedule` sync routine (needs Pro/Max).
 
 ## Known open items
-- `install.sh` curl one-liner URL needs real repo path once published
-- `settings.json` hooks use inline node — could be extracted to separate `.js` files for readability in a v1.1
-- No Windows install path yet (bash script only) — PowerShell variant is a future task
+- Nested subagent spawning (orchestrator-as-subagent spawning the fleet) is
+  deliberately avoided; if Claude Code hardens it later, revisit.
+- Windows install path is still bash-only (PowerShell variant is future work).

@@ -1,0 +1,9 @@
+{
+  "created": "2026-07-12",
+  "docs_last_synced": "2026-07-12",
+  "sync_interval_days": 60,
+  "doc_sources": {
+    "commands": "https://code.claude.com/docs/en/commands",
+    "tools": "https://code.claude.com/docs/en/tools-reference"
+  }
+}

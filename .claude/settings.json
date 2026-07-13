@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"event\":\"SubagentStop\",\"ts\":\"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\"}' >> ~/.claude/claudopus-agent-log.jsonl"
+            "command": "node -e \"const fs=require('fs'),path=require('path');let raw='';try{raw=fs.readFileSync(0,'utf8')}catch(e){}let d={};try{d=JSON.parse(raw)}catch(e){}const entry=JSON.stringify({event:'SubagentStop',ts:new Date().toISOString(),subagent_type:d.subagent_type||d.agent_type||null,model:d.model||null,session:process.env.CLAUDE_SESSION_ID||'unknown',cwd:process.cwd()})+'\\n';try{fs.appendFileSync(path.join(process.env.HOME,'.claude','omnipus-ledger.jsonl'),entry)}catch(e){}\" 2>/dev/null || true"
           }
         ]
       }
@@ -48,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/on-stop.js 2>/dev/null || true"
+            "command": "node -e \"const fs=require('fs'),path=require('path');try{const m=path.join(process.cwd(),'.claude','memory','project.json');if(fs.existsSync(m)){const j=JSON.parse(fs.readFileSync(m,'utf8'));j.last_session=new Date().toISOString();fs.writeFileSync(m,JSON.stringify(j,null,2))}}catch(e){}try{fs.appendFileSync(path.join(process.env.HOME,'.claude','omnipus-ledger.jsonl'),JSON.stringify({event:'Stop',ts:new Date().toISOString(),session:process.env.CLAUDE_SESSION_ID||'unknown',cwd:process.cwd()})+'\\n')}catch(e){}\" 2>/dev/null || true"
           }
         ]
       }
@@ -59,15 +59,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/bash-safety.js 2>/dev/null || true"
+            "command": "node -e \"const fs=require('fs');let raw='';try{raw=fs.readFileSync(0,'utf8')}catch(e){}try{const d=JSON.parse(raw);const cmd=(d.tool_input&&d.tool_input.command)||'';const blocked=['rm -rf /','rm -rf ~','dd if=','mkfs',':(){:|:&};:'];if(blocked.some(b=>cmd.includes(b))){console.log(JSON.stringify({decision:'block',reason:'Omnipus safety: destructive command blocked — '+cmd.slice(0,80)}))}}catch(e){}\" 2>/dev/null || true"
           }
         ]
       }
     ]
   },
   "env": {
-    "CLAUDOPUS_VERSION": "1.2.0",
-    "CLAUDOPUS_LOG": "~/.claude/claudopus-agent-log.jsonl"
+    "OMNIPUS_VERSION": "2.0.0",
+    "OMNIPUS_LEDGER": "~/.claude/omnipus-ledger.jsonl"
   },
   "includeCoAuthoredBy": false,
   "autoUpdaterStatus": "disabled"

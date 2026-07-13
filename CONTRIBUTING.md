@@ -1,12 +1,12 @@
-# Contributing to Claudopus
+# Contributing to Omnipus
 
-Thanks for your interest in contributing. Claudopus has a simple goal: be the most capable Claude Code agent system with the smallest possible footprint. Every contribution is evaluated against that goal.
+Thanks for your interest in contributing. Omnipus has a simple goal: be the most capable Claude Code agent system with the smallest possible footprint. Every contribution is evaluated against that goal.
 
 ---
 
 ## The core constraint
 
-Claudopus must remain understandable by reading it. If a contributor can't understand what every file does in 30 minutes, the project has failed its mission. Complexity is a cost, not a feature.
+Omnipus must remain understandable by reading it. If a contributor can't understand what every file does in 30 minutes, the project has failed its mission. Complexity is a cost, not a feature.
 
 ---
 
@@ -38,17 +38,17 @@ The `install.sh` bash script is functional but not exhaustive. Improvements to:
 - Edge cases in merge mode
 
 ### Documentation
-Clear examples of real tasks run through Claudopus, annotated transcripts showing the agent handoff sequence, or corrections to anything inaccurate in the existing docs.
+Clear examples of real tasks run through Omnipus, annotated transcripts showing the agent handoff sequence, or corrections to anything inaccurate in the existing docs.
 
 ---
 
 ## What doesn't fit
 
-**Other AI providers.** Claudopus is Anthropic-native by design. The simplicity comes from targeting one API with two models. Adding fallback chains for other providers is exactly the complexity we're avoiding.
+**Other AI providers.** Omnipus is Anthropic-native by design. The simplicity comes from targeting one API with two models. Adding fallback chains for other providers is exactly the complexity we're avoiding.
 
 **External runtime dependencies.** No npm packages, no Python libraries, no compiled binaries in the repo. Hooks use inline Node.js one-liners for a reason — they work on any machine with Node installed, with no install step.
 
-**Orchestration abstractions.** If you want to add a TypeScript runtime, a message queue, or a state machine on top of Claude Code's native subagent system — that's a different project. Claudopus is intentionally a layer of files, not a framework.
+**Orchestration abstractions.** If you want to add a TypeScript runtime, a message queue, or a state machine on top of Claude Code's native subagent system — that's a different project. Omnipus is intentionally a layer of files, not a framework.
 
 **Expanding agent count significantly.** Six agents cover the full lifecycle. New agents need a compelling case that they handle something genuinely distinct that no existing agent should handle.
 
@@ -64,7 +64,7 @@ Clear examples of real tasks run through Claudopus, annotated transcripts showin
 
 4. **Test it.** Run the thing you changed against a real project in Claude Code. Describe what you tested in the PR description.
 
-5. **No AI-generated PRs without disclosure.** If you used Claudopus or another AI to generate the contribution, say so. We're not opposed to it — we just want to know.
+5. **No AI-generated PRs without disclosure.** If you used Omnipus or another AI to generate the contribution, say so. We're not opposed to it — we just want to know.
 
 ---
 
@@ -74,7 +74,7 @@ Open an issue with:
 - What you expected to happen
 - What actually happened
 - The task you gave Claude Code
-- Which agent was active when it went wrong (check the agent log at `~/.claude/claudopus-agent-log.jsonl`)
+- Which agent was active when it went wrong (check the agent log at `~/.claude/omnipus-ledger.jsonl`)
 
 Vague reports like "it didn't work" can't be acted on.
 

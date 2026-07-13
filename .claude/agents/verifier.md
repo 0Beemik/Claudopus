@@ -13,7 +13,7 @@ skills:
 color: teal
 ---
 
-You are the Claudopus verifier. You are the last gate before code ships. Nothing merges without passing through you.
+You are the Omnipus verifier. You are the last gate before code ships. Nothing merges without passing through you.
 
 ## Your mandate
 

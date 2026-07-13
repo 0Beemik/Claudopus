@@ -1,11 +1,12 @@
 {
+  "_readme": "Reference copy of the Omnipus hooks. The active hooks live in ../settings.json (self-contained, no external files). This mirrors them for readability. The run-ledger (SubagentStop) is what makes delegation auditable — see the omnipus skill's observability section.",
   "hooks": {
     "SubagentStop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"\nconst fs = require('fs');\nconst path = require('path');\nconst logFile = path.join(process.env.HOME, '.claude', 'claudopus-agent-log.jsonl');\nconst entry = JSON.stringify({\n  event: 'SubagentStop',\n  ts: new Date().toISOString(),\n  session: process.env.CLAUDE_SESSION_ID || 'unknown',\n  cwd: process.cwd()\n}) + '\\n';\nfs.appendFileSync(logFile, entry);\n\" 2>/dev/null || true"
+            "command": "node -e \"\nconst fs = require('fs');\nconst path = require('path');\nlet raw = '';\ntry { raw = fs.readFileSync(0, 'utf8'); } catch (e) {}\nlet d = {};\ntry { d = JSON.parse(raw); } catch (e) {}\nconst logFile = path.join(process.env.HOME, '.claude', 'omnipus-ledger.jsonl');\nconst entry = JSON.stringify({\n  event: 'SubagentStop',\n  ts: new Date().toISOString(),\n  subagent_type: d.subagent_type || d.agent_type || null,\n  model: d.model || null,\n  session: process.env.CLAUDE_SESSION_ID || 'unknown',\n  cwd: process.cwd()\n}) + '\\n';\ntry { fs.appendFileSync(logFile, entry); } catch (e) {}\n\" 2>/dev/null || true"
           }
         ]
       }
@@ -15,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"\nconst fs = require('fs');\nconst path = require('path');\ntry {\n  const memFile = path.join(process.cwd(), '.claude', 'memory', 'project.json');\n  if (fs.existsSync(memFile)) {\n    const mem = JSON.parse(fs.readFileSync(memFile, 'utf8'));\n    mem.last_session = new Date().toISOString();\n    fs.writeFileSync(memFile, JSON.stringify(mem, null, 2));\n  }\n} catch(e) {}\nconst logFile = path.join(process.env.HOME, '.claude', 'claudopus-agent-log.jsonl');\nconst entry = JSON.stringify({\n  event: 'Stop',\n  ts: new Date().toISOString(),\n  session: process.env.CLAUDE_SESSION_ID || 'unknown',\n  cwd: process.cwd()\n}) + '\\n';\nfs.appendFileSync(logFile, entry);\n\" 2>/dev/null || true"
+            "command": "node -e \"\nconst fs = require('fs');\nconst path = require('path');\ntry {\n  const memFile = path.join(process.cwd(), '.claude', 'memory', 'project.json');\n  if (fs.existsSync(memFile)) {\n    const mem = JSON.parse(fs.readFileSync(memFile, 'utf8'));\n    mem.last_session = new Date().toISOString();\n    fs.writeFileSync(memFile, JSON.stringify(mem, null, 2));\n  }\n} catch (e) {}\nconst logFile = path.join(process.env.HOME, '.claude', 'omnipus-ledger.jsonl');\ntry { fs.appendFileSync(logFile, JSON.stringify({ event: 'Stop', ts: new Date().toISOString(), session: process.env.CLAUDE_SESSION_ID || 'unknown', cwd: process.cwd() }) + '\\n'); } catch (e) {}\n\" 2>/dev/null || true"
           }
         ]
       }
@@ -26,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node -e \"\nconst input = require('fs').readFileSync('/dev/stdin', 'utf8');\ntry {\n  const data = JSON.parse(input);\n  const cmd = (data.tool_input && data.tool_input.command) || '';\n  const blocked = [\n    'rm -rf /',\n    'rm -rf ~',\n    'dd if=',\n    'mkfs',\n    ':(){:|:&};:'\n  ];\n  const isBlocked = blocked.some(b => cmd.includes(b));\n  if (isBlocked) {\n    console.log(JSON.stringify({ decision: 'block', reason: 'Claudopus safety: destructive command blocked — ' + cmd.slice(0, 80) }));\n  }\n} catch(e) {}\n\" 2>/dev/null || true"
+            "command": "node -e \"\nconst fs = require('fs');\nlet raw = '';\ntry { raw = fs.readFileSync(0, 'utf8'); } catch (e) {}\ntry {\n  const data = JSON.parse(raw);\n  const cmd = (data.tool_input && data.tool_input.command) || '';\n  const blocked = ['rm -rf /', 'rm -rf ~', 'dd if=', 'mkfs', ':(){:|:&};:'];\n  if (blocked.some(b => cmd.includes(b))) {\n    console.log(JSON.stringify({ decision: 'block', reason: 'Omnipus safety: destructive command blocked — ' + cmd.slice(0, 80) }));\n  }\n} catch (e) {}\n\" 2>/dev/null || true"
           }
         ]
       }

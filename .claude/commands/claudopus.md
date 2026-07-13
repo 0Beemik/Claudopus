@@ -1,6 +1,12 @@
-# Claudopus
+# Claudopus (legacy alias → /omnipus)
 
-Begin a new task with Claudopus. Triggers the full workflow: interview → pre-plan → plan → build → review → verify → ship.
+> **This is a legacy alias.** The current entry point is **`/omnipus`**, which
+> runs the same fleet through the full Ω-pipeline (triage → interview →
+> pre-plan → plan → build → verify → review → audit → reconcile → deliver) with
+> the run-ledger, circuit breaker, and learning memory. Prefer `/omnipus`; this
+> command is kept so existing muscle memory and docs still work.
+
+Begin a new task. Triggers the full workflow: interview → pre-plan → plan → build → review → verify → audit → ship.
 
 Use this when you have a new feature, fix, or task and want the full pipeline.
 

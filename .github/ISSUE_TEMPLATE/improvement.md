@@ -16,7 +16,7 @@ labels: enhancement
 
 <!-- What specifically would you change? Paste the new text if you have it. -->
 
-## Why this fits Claudopus
+## Why this fits Omnipus
 
 <!-- How does this make the system more capable without adding complexity? -->
 

@@ -20,14 +20,14 @@ Run `/pre-plan` on its own first if you want to see the decide/recon brief befor
 /plan create a caching layer for the jobs API endpoint
 ```
 
-## When to use `/plan` vs `/claudopus`
+## When to use `/plan` vs `/omnipus`
 
 Use `/plan` when:
 - Requirements are completely clear
 - You want to review the plan before committing to implementation
 - You want a plan for discussion without immediately building
 
-Use `/claudopus` when:
+Use `/omnipus` when:
 - Requirements may need clarification
 - You want the full pipeline from task to shipped code
 

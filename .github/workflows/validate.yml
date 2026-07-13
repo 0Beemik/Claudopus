@@ -8,7 +8,7 @@ on:
 
 jobs:
   validate:
-    name: Check all required files are present
+    name: Check Omnipus system integrity
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
 
       - name: Verify required files
         run: |
-          echo "Checking Claudopus file structure..."
+          echo "Checking Omnipus file structure..."
 
           required_files=(
             ".claude/CLAUDE.md"
@@ -29,6 +29,11 @@ jobs:
             ".claude/agents/reviewer.md"
             ".claude/agents/verifier.md"
             ".claude/agents/auditor.md"
+            ".claude/skills/omnipus/SKILL.md"
+            ".claude/skills/omnipus/version.json"
+            ".claude/skills/omnipus/references/commands.md"
+            ".claude/skills/omnipus/references/tools.md"
+            ".claude/skills/omnipus/references/SYNC.md"
             ".claude/skills/deep-interview.md"
             ".claude/skills/plan.md"
             ".claude/skills/build.md"
@@ -36,7 +41,7 @@ jobs:
             ".claude/skills/verify.md"
             ".claude/skills/commit.md"
             ".claude/hooks/settings.json"
-            ".claude/commands/claudopus.md"
+            ".claude/commands/omnipus.md"
             ".claude/commands/pre-plan.md"
             ".claude/commands/plan.md"
             ".claude/commands/build.md"
@@ -68,41 +73,80 @@ jobs:
           echo ""
           echo "All required files present."
 
+      - name: Pipeline wiring self-test
+        run: |
+          echo "Verifying the skill actually references real agents..."
+          echo "(This is the check that would have caught the original bug:"
+          echo " a skill that DESCRIBES spawning agents but wires to none.)"
+
+          skill=".claude/skills/omnipus/SKILL.md"
+          fleet=(interviewer planner executor verifier reviewer auditor)
+
+          all_ok=true
+          for agent in "${fleet[@]}"; do
+            # (a) the agent file exists
+            if [ ! -f ".claude/agents/$agent.md" ]; then
+              echo "✗ missing agent file: .claude/agents/$agent.md"
+              all_ok=false
+            fi
+            # (b) the skill's pipeline actually names it (so it gets spawned)
+            if grep -qw "$agent" "$skill"; then
+              echo "✓ skill references '$agent' and .claude/agents/$agent.md exists"
+            else
+              echo "✗ skill does NOT reference fleet agent '$agent' — it would never spawn it"
+              all_ok=false
+            fi
+          done
+
+          # (c) no orphaned agents: every agent file is referenced by the skill or CLAUDE.md
+          for f in .claude/agents/*.md; do
+            name="$(basename "$f" .md)"
+            if grep -qw "$name" "$skill" || grep -qw "$name" ".claude/CLAUDE.md"; then
+              echo "✓ agent '$name' is wired into the system"
+            else
+              echo "✗ orphaned agent '$name' — defined but never referenced"
+              all_ok=false
+            fi
+          done
+
+          if [ "$all_ok" = false ]; then
+            echo ""
+            echo "Pipeline wiring is broken — the skill and fleet are out of sync."
+            exit 1
+          fi
+          echo ""
+          echo "Pipeline wiring intact: the skill spawns the real fleet."
+
       - name: Validate agent frontmatter
         run: |
           echo "Checking agent frontmatter..."
-
           check_frontmatter() {
-            local file="$1"
-            local field="$2"
+            local file="$1"; local field="$2"
             if grep -q "^$field:" "$file"; then
               echo "✓ $file has $field"
             else
-              echo "✗ $file missing $field"
-              exit 1
+              echo "✗ $file missing $field"; exit 1
             fi
           }
-
           for agent in .claude/agents/*.md; do
             check_frontmatter "$agent" "name"
             check_frontmatter "$agent" "description"
             check_frontmatter "$agent" "model"
           done
-
           echo "All agent frontmatter valid."
 
-      - name: Validate settings JSON
+      - name: Validate JSON
         run: |
           echo "Checking JSON validity..."
-          node -e "JSON.parse(require('fs').readFileSync('.claude/settings.json', 'utf8'))" && echo "✓ .claude/settings.json is valid JSON"
-          node -e "JSON.parse(require('fs').readFileSync('.claude/hooks/settings.json', 'utf8'))" && echo "✓ .claude/hooks/settings.json is valid JSON"
-          node -e "JSON.parse(require('fs').readFileSync('.claude/memory/project.json', 'utf8'))" && echo "✓ .claude/memory/project.json is valid JSON"
+          node -e "JSON.parse(require('fs').readFileSync('.claude/settings.json','utf8'))" && echo "✓ .claude/settings.json"
+          node -e "JSON.parse(require('fs').readFileSync('.claude/hooks/settings.json','utf8'))" && echo "✓ .claude/hooks/settings.json"
+          node -e "JSON.parse(require('fs').readFileSync('.claude/memory/project.json','utf8'))" && echo "✓ .claude/memory/project.json"
+          node -e "JSON.parse(require('fs').readFileSync('.claude/skills/omnipus/version.json','utf8'))" && echo "✓ .claude/skills/omnipus/version.json"
 
       - name: Check install script is executable
         run: |
           if [ -x "install.sh" ]; then
             echo "✓ install.sh is executable"
           else
-            echo "✗ install.sh is not executable — run: chmod +x install.sh"
-            exit 1
+            echo "✗ install.sh is not executable — run: chmod +x install.sh"; exit 1
           fi

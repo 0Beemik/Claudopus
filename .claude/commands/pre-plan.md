@@ -27,4 +27,4 @@ The output is a **validated brief** — hand it to the planner (`/plan`) and the
 
 ## After pre-plan
 
-No code is written. Review the brief, then run `/plan` (or `/claudopus`) to turn it into an implementation plan — or `/build` if a plan already exists and the recon only refined it.
+No code is written. Review the brief, then run `/plan` (or `/omnipus`) to turn it into an implementation plan — or `/build` if a plan already exists and the recon only refined it.

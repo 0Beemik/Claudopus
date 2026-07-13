@@ -20,7 +20,7 @@ This skill is **rigid** — follow every phase in order. Do not skip ahead. Do n
 
 ## Where this fits
 
-`actions` is the **decision/diagnosis methodology** for Claudopus. It is invoked two ways:
+`actions` is the **decision/diagnosis methodology** for Omnipus. It is invoked two ways:
 
 1. **As Phase A of `pre-plan`** — when prepping a non-trivial change for the planner, `actions` decides *the right approach* before `recon` audits it against the code.
 2. **Standalone, reactively** — a bug surfaces mid-build, or a judgment call appears that isn't tied to planning. Run `actions` on its own; no plan required.
