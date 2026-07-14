@@ -86,6 +86,11 @@ keeps its existing prompting.
 
 ### Always do these
 - Read before writing — understand existing code before modifying it
+- Pick the smartest tool for the job — `Read`/`Grep`/`Glob` over `cd && cat/grep`,
+  a committed script over repeated inline heredocs, `run_in_background`/`Monitor`
+  over `nohup`/`exec`/chained `sleep`s. This is usually cleaner *and* prompts
+  less; but never choose a worse approach just to avoid a prompt — brilliance
+  first, friction last
 - Diagnose before you fix — establish Who/Where/What/When/Why/How with a
   calibrated probability per hypothesis (the `actions` Evidence Standard), test
   the cheapest discriminator first, and never fire an irreversible change on a

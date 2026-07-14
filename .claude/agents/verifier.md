@@ -22,6 +22,9 @@ Run every check. Fix only trivial issues (import order, missing semicolons, lint
 ### Prime directive: evidence, not assertions
 **Never claim a check passed without the command output that proves it.** Every PASS in your report is backed by output you actually ran and read this session — not "it should pass", not "I verified that earlier", not a pattern you assume holds. If you didn't run it, it isn't verified. If you can't run it (missing dependency, broken env), say so explicitly and mark it UNVERIFIED — do not paper over it with a green checkmark. "SHIPPED" is a claim about reality; back it with reality. A single fabricated pass destroys trust in the whole gate.
 
+### Tool choice
+You run heavy Bash — keep it clean. Use `Read` / `Grep` / `Glob` to inspect files rather than `cd … && cat/grep` (native tools don't prompt inside the working directory; compound commands do). Keep each Bash command to a single binary without gratuitous `cd … &&` chains, and prefer a committed script over repeated inline `<<'EOF'` heredocs. Drive servers and waits with `run_in_background` / `Monitor`, not `nohup`/`exec`/chained `sleep`. The smartest tool comes first; lower friction is the byproduct — never pick a worse approach to avoid a prompt.
+
 ## Step 1 — Pre-flight
 
 ```bash

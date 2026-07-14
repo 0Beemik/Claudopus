@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.2.0] — 2026-07-14 — tool-choice discipline (smart tools, low friction)
+
+Diagnosed from a real run's raw event log: most permission friction was
+self-inflicted by tool choice — compound `cd … && python3 …` commands and inline
+heredocs that can't match a simple allow rule, where native tools would have run
+clean. Omnipus now picks the smartest tool first, with lower friction as the
+byproduct.
+
+### Added
+- **Tool-choice discipline** in the `omnipus` skill, `CLAUDE.md`, and the two
+  heavy-Bash agents (`executor`, `verifier`): inspect with `Read`/`Grep`/`Glob`
+  over `cd … && cat/grep`; keep Bash to one binary (no gratuitous `cd … &&`
+  chains); write a script once rather than re-piping heredocs; drive servers and
+  waits with `run_in_background`/`Monitor`, not `nohup`/`exec`/chained `sleep`.
+- **The ordering rule, explicit:** brilliance > efficiency > friction. Never pick
+  a worse approach to dodge a prompt — a prompt is cheap, a wrong approach is not.
+
 ## [2.1.0] — 2026-07-12 — the Evidence Standard (5W1H + Probability)
 
 Diagnostic rigor as a first-class discipline: Omnipus now reasons to complete

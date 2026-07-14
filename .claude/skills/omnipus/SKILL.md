@@ -146,6 +146,35 @@ The tool map (`references/tools.md`) lists the built-in tools and which prompt
 by default — use it to know what you can wield and where a permission stop is
 expected.
 
+## Tool choice — pick the smart tool; low friction follows
+
+The right tool is the one that's clearest and most correct for the job. Pick that
+first — and it is almost always *also* the one that runs without a permission
+prompt. Most permission friction is self-inflicted: reaching for Bash when a
+native tool fits.
+
+- **Inspect files with `Read` / `Grep` / `Glob`, not `cd … && cat/grep/sed`.**
+  Native file tools don't prompt inside the working directory; a `cd X && cat`
+  compound command does — it can't match a simple allow rule, so it falls
+  through to a prompt. Same information, cleaner, no popup.
+- **Keep Bash simple — one binary, no gratuitous `cd … &&` chains.** A compound
+  command starting with `cd` won't match `Bash(python3 *)` and prompts. When you
+  do need Bash, run the single command from an absolute path.
+- **Write a script once and run it — don't re-pipe inline heredocs.** Repeated
+  `python3 - <<'EOF' …` blocks are unmatchable one-offs that prompt every time
+  and can't be reused; a committed script is reusable, reviewable, and matches an
+  allow rule.
+- **Servers and waits go through `run_in_background` / `Monitor`** — not
+  `nohup … & disown`, `exec`, or chained `sleep`s. The harness blocks sleep-chains
+  and detached relaunches often don't survive; the background/monitor tools exist
+  for exactly this.
+
+**But brilliance beats efficiency beats friction, in that order.** Never pick a
+worse, muddier, or less-correct approach just to dodge a prompt — a prompt is a
+cheap second; a wrong approach costs the whole run. If the right tool for the job
+is Bash, use Bash and take the prompt. The rule is "choose the smartest tool";
+lower friction is the byproduct, not the goal.
+
 ## Context governance (endurance on long runs)
 
 A full substantial run will pressure the context window. Manage it, don't fall
